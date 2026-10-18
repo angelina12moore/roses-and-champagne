@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Now &amp; 2060 — A Ballot of Values</title>
+  <meta name="description" content="Place one point for today and one for 2060: how should we balance equality, environmental sustainability and human dignity?" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="bloom bloom-a" aria-hidden="true"></div>
+  <div class="bloom bloom-b" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <div class="eyebrow reveal" style="--d:0">
+      <span>A public ballot</span>
+      <span class="rule"></span>
+      <span id="live-count-top">Gathering responses…</span>
+    </div>
+    <h1 class="reveal" style="--d:1">
+      What we hold dear,<br />
+      <em>now</em> <span class="amp">&amp;</span> <em>in 2060</em>
+    </h1>
+    <div class="intro reveal" style="--d:2">
+      <p>
+        Three values pull against one another: <b class="c-env">environmental sustainability</b>,
+        <b class="c-eq">equality</b> and <b class="c-dig">human dignity</b>.
+        Place one point in each triangle — where society's priorities sit today, and where they
+        ought to sit by 2060. The closer you are to a corner, the more weight that value carries.
+      </p>
+      <p class="fine">Anonymous. One ballot per device — you can return and revise it at any time.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="ballot" aria-label="Your ballot">
+      <article class="plate reveal" style="--d:3" data-plot="present">
+        <header class="plate-head">
+          <span class="numeral">I.</span>
+          <div>
+            <h2>The Present <span class="year">2026</span></h2>
+            <p>Where do priorities actually sit today?</p>
+          </div>
+        </header>
+        <div class="tri-wrap">
+          <svg class="tri" id="tri-present" viewBox="0 0 400 392" role="slider" tabindex="0"
+               aria-label="Present-day priorities. Click or drag inside the triangle; use arrow keys to adjust."></svg>
+        </div>
+        <div class="readout" id="readout-present"></div>
+      </article>
+
+      <div class="arrow-between reveal" style="--d:4" aria-hidden="true">
+        <svg viewBox="0 0 60 24"><path d="M2 12 H52 M44 4 L54 12 L44 20" /></svg>
+        <span>34 years</span>
+      </div>
+
+      <article class="plate reveal" style="--d:5" data-plot="future">
+        <header class="plate-head">
+          <span class="numeral">II.</span>
+          <div>
+            <h2>The Future <span class="year">2060</span></h2>
+            <p>Where should they sit by 2060?</p>
+          </div>
+        </header>
+        <div class="tri-wrap">
+          <svg class="tri" id="tri-future" viewBox="0 0 400 392" role="slider" tabindex="0"
+               aria-label="Priorities for 2060. Click or drag inside the triangle; use arrow keys to adjust."></svg>
+        </div>
+        <div class="readout" id="readout-future"></div>
+      </article>
+    </section>
+
+    <div class="cast reveal" style="--d:6">
+      <button type="button" class="btn-ghost" id="btn-reset">Recentre both points</button>
+      <button type="button" class="btn-cast" id="btn-submit">
+        <span class="btn-label">Cast my ballot</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+      </button>
+      <p class="cast-note" id="cast-note" aria-live="polite"></p>
+    </div>
+
+    <section class="collective" aria-labelledby="collective-title">
+      <div class="collective-head">
+        <h2 id="collective-title"><span class="numeral">III.</span> The Collective</h2>
+        <p class="sub">Every ballot cast so far, updated live.</p>
+        <div class="seg" role="tablist" aria-label="Which triangle to show">
+          <button role="tab" aria-selected="true" data-view="drift">The drift</button>
+          <button role="tab" aria-selected="false" data-view="present">2026</button>
+          <button role="tab" aria-selected="false" data-view="future">2060</button>
+        </div>
+      </div>
+
+      <div class="collective-body">
+        <figure class="plate plate-wide">
+          <div class="tri-wrap">
+            <svg class="tri tri-static" id="tri-collective" viewBox="0 0 400 392" aria-label="All responses"></svg>
+          </div>
+          <figcaption id="collective-caption"></figcaption>
+        </figure>
+
+        <div class="ledger">
+          <div class="tally">
+            <span class="tally-num" id="tally-num">—</span>
+            <span class="tally-label" id="tally-label">ballots cast</span>
+          </div>
+          <ul class="avg-list" id="avg-list"></ul>
+          <div class="ledger-foot">
+            <button type="button" class="btn-link" id="btn-csv">Download responses (CSV)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <span>Sustainability · Equality · Dignity</span>
+    <span class="dot">✦</span>
+    <span>Each point's three shares always total 100%.</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="/app.js"></script>
+<script async src="/.netlify/scripts/ar" data-netlify-deploy-id="6ad288db3b1c53154f6fb0c6" data-netlify-site-id="1619cfad-f9f5-4903-a06c-417d14bb5a5c" data-agent-runner-id="6ad28720d2426dfa975abeae"></script>
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=owner-private" data-nf-variant="owner-private" data-netlify-site-id="1619cfad-f9f5-4903-a06c-417d14bb5a5c" data-app-host="app.netlify.com"></script>
