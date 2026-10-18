@@ -17,41 +17,57 @@
     .font-serif-title { font-family: 'Cormorant Garamond', serif; }
 
     .glass-card { 
-      background: rgba(58, 15, 25, 0.55); 
+      background: rgba(58, 15, 25, 0.6); 
       backdrop-filter: blur(20px); 
-      border: 1px solid rgba(247, 231, 206, 0.15); 
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(247, 231, 206, 0.2); 
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
     }
 
-    .champagne-glow { box-shadow: 0 0 30px rgba(247, 231, 206, 0.12); }
-    .rose-glow { box-shadow: 0 0 35px rgba(225, 112, 133, 0.18); }
+    .champagne-glow { box-shadow: 0 0 30px rgba(247, 231, 206, 0.15); }
+    .rose-glow { box-shadow: 0 0 35px rgba(225, 112, 133, 0.2); }
+
+    .floating-sticker {
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(5deg); }
+    }
 
     canvas { touch-action: none; cursor: crosshair; }
   </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen pb-20 relative overflow-x-hidden">
 
-  <!-- Top Navigation Bar -->
-  <nav class="border-b border-rose-900/40 bg-black/40 backdrop-blur-md sticky top-0 z-50">
+  <!-- Background Decorative Floating Stickers -->
+  <div class="fixed top-20 left-6 text-4xl opacity-20 pointer-events-none floating-sticker">🌹</div>
+  <div class="fixed top-40 right-10 text-4xl opacity-20 pointer-events-none floating-sticker" style="animation-delay: 1s;">🥂</div>
+  <div class="fixed bottom-20 left-10 text-4xl opacity-20 pointer-events-none floating-sticker" style="animation-delay: 2s;">✨</div>
+  <div class="fixed bottom-30 right-8 text-4xl opacity-20 pointer-events-none floating-sticker" style="animation-delay: 1.5s;">🍾</div>
+
+  <!-- Navigation Bar -->
+  <nav class="border-b border-rose-900/40 bg-black/50 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-700 via-pink-600 to-amber-200 flex items-center justify-center text-xl shadow-lg">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-700 via-pink-600 to-amber-200 flex items-center justify-center text-2xl shadow-lg border border-amber-200/30">
           🌹
         </div>
         <div>
-          <h1 class="text-xl font-bold font-serif-title text-amber-100 tracking-wide">Roses & Champagne</h1>
-          <p class="text-xs text-rose-300/70">Societal Values Study • 2026 vs 2060</p>
+          <h1 class="text-2xl font-bold font-serif-title text-amber-100 tracking-wide flex items-center gap-2">
+            Roses & Champagne <span class="text-xs font-sans text-rose-300 font-normal px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-800/40">Value Study</span>
+          </h1>
+          <p class="text-xs text-rose-300/80">Societal Priorities Allocation • 2026 vs 2060</p>
         </div>
       </div>
 
       <div class="flex items-center gap-4">
-        <!-- Live Submission Counter Badge -->
-        <div class="px-4 py-1.5 rounded-full text-xs font-semibold bg-rose-950/60 text-amber-200 border border-rose-500/30 flex items-center gap-2 shadow-inner">
-          <span class="w-2 h-2 rounded-full bg-amber-300 animate-pulse"></span>
-          Submissions: <span id="responseCounter" class="text-amber-100 font-bold text-sm">21</span>
+        <!-- Live Response Counter -->
+        <div class="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-950/80 text-amber-200 border border-amber-200/30 flex items-center gap-2 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-300 animate-pulse"></span>
+          Recorded Submissions: <span id="responseCounter" class="text-amber-100 font-extrabold text-sm">21</span>
         </div>
 
-        <button id="exportCsvBtn" onclick="exportDataCSV()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 text-amber-100 border border-amber-200/20 rounded-xl transition flex items-center gap-2 shadow-md">
+        <button id="exportCsvBtn" onclick="exportDataCSV()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-rose-900 to-amber-900 hover:from-rose-800 hover:to-amber-800 text-amber-100 border border-amber-200/30 rounded-xl transition flex items-center gap-2 shadow-md">
           <span>🥂</span> Export CSV for Excel
         </button>
       </div>
@@ -60,114 +76,124 @@
 
   <main class="max-w-7xl mx-auto px-6 mt-10 space-y-10">
 
-    <!-- Hero Header Note -->
+    <!-- Hero Title Note -->
     <div class="glass-card p-8 rounded-3xl text-center relative overflow-hidden champagne-glow">
+      <div class="absolute top-3 left-4 text-2xl opacity-40">🌹</div>
+      <div class="absolute top-3 right-4 text-2xl opacity-40">🥂</div>
       <div class="absolute -top-12 -left-12 w-48 h-48 bg-rose-600/10 rounded-full blur-3xl"></div>
       <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-amber-400/10 rounded-full blur-3xl"></div>
       
-      <span class="text-xs uppercase tracking-widest font-semibold text-rose-300/80 bg-rose-950/50 px-3 py-1 rounded-full border border-rose-800/40">
-        Interactive Values Allocation
+      <span class="text-xs uppercase tracking-widest font-semibold text-rose-300 bg-rose-950/80 px-4 py-1.5 rounded-full border border-rose-800/50 inline-flex items-center gap-2">
+        <span>✨</span> Interactive Tri-Value Allocator <span>✨</span>
       </span>
       
-      <h2 class="text-3xl md:text-4xl font-serif-title font-bold text-amber-100 mt-3 mb-3">
+      <h2 class="text-3xl md:text-5xl font-serif-title font-bold text-amber-100 mt-4 mb-3">
         Mapping Human Priorities Across Time
       </h2>
-      <p class="text-sm md:text-base text-rose-100/80 max-w-2xl mx-auto leading-relaxed">
-        Welcome! This interactive study explores how we balance core societal values today and how priorities ought to shift by <strong>2060</strong>. Click or drag inside each ternary triangle to assign your weighting.
+      <p class="text-sm md:text-base text-rose-100/90 max-w-2xl mx-auto leading-relaxed">
+        Explore how society allocates weight between core values today and how priorities ought to shift by <strong>2060</strong>. Drag or click on the ternary triangles below to participate!
       </p>
     </div>
 
-    <!-- Value Definition Cards -->
+    <!-- Value Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="glass-card p-5 rounded-2xl border-t-2 border-t-rose-400/60">
-        <div class="flex items-center gap-2 text-rose-300 mb-2">
-          <span class="text-lg">⚖️</span>
-          <h3 class="font-serif-title text-lg font-bold text-amber-100">Equality</h3>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-rose-400 relative">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-serif-title text-xl font-bold text-amber-100 flex items-center gap-2">
+            <span>⚖️</span> Equality
+          </h3>
+          <span class="text-xs text-rose-300 bg-rose-950/60 px-2 py-0.5 rounded">Top Apex</span>
         </div>
-        <p class="text-xs text-rose-100/70 leading-relaxed">
-          Fair distribution of resources, opportunity, justice, and social safety nets for all individuals regardless of background.
+        <p class="text-xs text-rose-100/80 leading-relaxed">
+          Fair distribution of resources, opportunities, justice, and social safety nets for all individuals regardless of status.
         </p>
       </div>
 
-      <div class="glass-card p-5 rounded-2xl border-t-2 border-t-emerald-400/60">
-        <div class="flex items-center gap-2 text-emerald-300 mb-2">
-          <span class="text-lg">🌿</span>
-          <h3 class="font-serif-title text-lg font-bold text-amber-100">Environmental Sustainability</h3>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-emerald-400 relative">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-serif-title text-xl font-bold text-amber-100 flex items-center gap-2">
+            <span>🌿</span> Environmental Sustainability
+          </h3>
+          <span class="text-xs text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded">Bottom-Left</span>
         </div>
-        <p class="text-xs text-rose-100/70 leading-relaxed">
-          Ecological health, biodiversity, climate balance, and preserving planet Earth for current and future generations.
+        <p class="text-xs text-rose-100/80 leading-relaxed">
+          Ecological health, biodiversity, climate equilibrium, and safeguarding natural ecosystems for current and future generations.
         </p>
       </div>
 
-      <div class="glass-card p-5 rounded-2xl border-t-2 border-t-amber-400/60">
-        <div class="flex items-center gap-2 text-amber-300 mb-2">
-          <span class="text-lg">✨</span>
-          <h3 class="font-serif-title text-lg font-bold text-amber-100">Human Dignity</h3>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-amber-400 relative">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-serif-title text-xl font-bold text-amber-100 flex items-center gap-2">
+            <span>✨</span> Human Dignity
+          </h3>
+          <span class="text-xs text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded">Bottom-Right</span>
         </div>
-        <p class="text-xs text-rose-100/70 leading-relaxed">
-          Inherent personal worth, individual liberty, autonomy, creative expression, and fundamental human rights.
+        <p class="text-xs text-rose-100/80 leading-relaxed">
+          Inherent personal worth, individual freedom, bodily autonomy, creative fulfillment, and fundamental human rights.
         </p>
       </div>
     </div>
 
-    <!-- Dual Ternary Plots -->
+    <!-- Plots Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       
       <!-- Present Day (2026) -->
-      <div class="glass-card p-6 rounded-3xl flex flex-col items-center rose-glow">
+      <div class="glass-card p-6 rounded-3xl flex flex-col items-center rose-glow relative">
+        <div class="absolute top-4 right-4 text-xl">🌹</div>
         <div class="w-full flex justify-between items-center mb-4">
           <div>
-            <h3 class="text-xl font-serif-title font-bold text-rose-200">1. Present-Day Allocation (2026)</h3>
-            <p class="text-xs text-rose-300/60">How society values priorities today</p>
+            <h3 class="text-2xl font-serif-title font-bold text-rose-200">1. Present-Day Allocation (2026)</h3>
+            <p class="text-xs text-rose-300/70">Current perceived value weightings</p>
           </div>
-          <span class="text-xs font-semibold px-3 py-1 bg-rose-950/80 text-rose-200 rounded-full border border-rose-700/30">2026</span>
+          <span class="text-xs font-semibold px-3 py-1 bg-rose-950/90 text-rose-200 rounded-full border border-rose-700/50">2026</span>
         </div>
 
         <div class="relative w-full max-w-[400px] aspect-square my-2">
-          <canvas id="canvasPresent" width="400" height="400" class="w-full h-full rounded-2xl bg-black/40 shadow-inner border border-rose-900/30"></canvas>
+          <canvas id="canvasPresent" width="400" height="400" class="w-full h-full rounded-2xl bg-black/50 shadow-inner border border-rose-900/40"></canvas>
         </div>
 
         <div class="w-full grid grid-cols-3 gap-3 mt-4 text-center text-xs">
-          <div class="bg-rose-950/40 p-2.5 rounded-xl border border-rose-500/20">
-            <div class="text-rose-300/70">Equality</div>
+          <div class="bg-rose-950/60 p-2.5 rounded-xl border border-rose-500/30">
+            <div class="text-rose-300/80">Equality</div>
             <div id="val-pres-eq" class="text-base font-bold text-rose-200 mt-0.5">33.3%</div>
           </div>
-          <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/20">
-            <div class="text-emerald-300/70">Sustainability</div>
+          <div class="bg-emerald-950/60 p-2.5 rounded-xl border border-emerald-500/30">
+            <div class="text-emerald-300/80">Sustainability</div>
             <div id="val-pres-sus" class="text-base font-bold text-emerald-200 mt-0.5">33.3%</div>
           </div>
-          <div class="bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/20">
-            <div class="text-amber-300/70">Human Dignity</div>
+          <div class="bg-amber-950/60 p-2.5 rounded-xl border border-amber-500/30">
+            <div class="text-amber-300/80">Human Dignity</div>
             <div id="val-pres-dig" class="text-base font-bold text-amber-200 mt-0.5">33.4%</div>
           </div>
         </div>
       </div>
 
       <!-- Future Scenario (2060) -->
-      <div class="glass-card p-6 rounded-3xl flex flex-col items-center champagne-glow">
+      <div class="glass-card p-6 rounded-3xl flex flex-col items-center champagne-glow relative">
+        <div class="absolute top-4 right-4 text-xl">🥂</div>
         <div class="w-full flex justify-between items-center mb-4">
           <div>
-            <h3 class="text-xl font-serif-title font-bold text-amber-200">2. Future Scenario Allocation (2060)</h3>
-            <p class="text-xs text-rose-300/60">Desired priority weighting by 2060</p>
+            <h3 class="text-2xl font-serif-title font-bold text-amber-200">2. Future Scenario Allocation (2060)</h3>
+            <p class="text-xs text-rose-300/70">Ideal target value allocation by 2060</p>
           </div>
-          <span class="text-xs font-semibold px-3 py-1 bg-amber-950/80 text-amber-200 rounded-full border border-amber-700/30">2060</span>
+          <span class="text-xs font-semibold px-3 py-1 bg-amber-950/90 text-amber-200 rounded-full border border-amber-700/50">2060</span>
         </div>
 
         <div class="relative w-full max-w-[400px] aspect-square my-2">
-          <canvas id="canvasFuture" width="400" height="400" class="w-full h-full rounded-2xl bg-black/40 shadow-inner border border-amber-900/30"></canvas>
+          <canvas id="canvasFuture" width="400" height="400" class="w-full h-full rounded-2xl bg-black/50 shadow-inner border border-amber-900/40"></canvas>
         </div>
 
         <div class="w-full grid grid-cols-3 gap-3 mt-4 text-center text-xs">
-          <div class="bg-rose-950/40 p-2.5 rounded-xl border border-rose-500/20">
-            <div class="text-rose-300/70">Equality</div>
+          <div class="bg-rose-950/60 p-2.5 rounded-xl border border-rose-500/30">
+            <div class="text-rose-300/80">Equality</div>
             <div id="val-fut-eq" class="text-base font-bold text-rose-200 mt-0.5">33.3%</div>
           </div>
-          <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/20">
-            <div class="text-emerald-300/70">Sustainability</div>
+          <div class="bg-emerald-950/60 p-2.5 rounded-xl border border-emerald-500/30">
+            <div class="text-emerald-300/80">Sustainability</div>
             <div id="val-fut-sus" class="text-base font-bold text-emerald-200 mt-0.5">33.3%</div>
           </div>
-          <div class="bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/20">
-            <div class="text-amber-300/70">Human Dignity</div>
+          <div class="bg-amber-950/60 p-2.5 rounded-xl border border-amber-500/30">
+            <div class="text-amber-300/80">Human Dignity</div>
             <div id="val-fut-dig" class="text-base font-bold text-amber-200 mt-0.5">33.4%</div>
           </div>
         </div>
@@ -177,37 +203,37 @@
 
     <!-- Submit Button -->
     <div class="flex justify-center pt-4">
-      <button id="submitBtn" onclick="submitResponses()" class="px-12 py-4 bg-gradient-to-r from-rose-700 via-pink-600 to-amber-500 hover:from-rose-600 hover:to-amber-400 text-white font-serif-title font-bold text-lg rounded-2xl shadow-2xl transition transform active:scale-95 flex items-center gap-3 border border-amber-200/30">
-        <span>🌹</span> Submit Dual Assessment
+      <button id="submitBtn" onclick="submitResponses()" class="px-12 py-4 bg-gradient-to-r from-rose-700 via-pink-600 to-amber-500 hover:from-rose-600 hover:to-amber-400 text-white font-serif-title font-bold text-xl rounded-2xl shadow-2xl transition transform active:scale-95 flex items-center gap-3 border border-amber-200/40">
+        <span>🌹</span> Submit Assessment <span>🥂</span>
       </button>
     </div>
 
   </main>
 
   <script>
-    // PRE-LOADED LEGACY RESPONSES (21 Records)
+    // EXACT 21 RESPONSES FROM CSV FILE
     const initialOldResponses = [
-      { Respondent_ID: 'Resp_1001', Present_Equality: 33.3, Present_Sustainability: 33.3, Present_Dignity: 33.4, Future_Equality: 20.0, Future_Sustainability: 60.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T18:00:00Z' },
-      { Respondent_ID: 'Resp_1002', Present_Equality: 40.0, Present_Sustainability: 20.0, Present_Dignity: 40.0, Future_Equality: 15.0, Future_Sustainability: 70.0, Future_Dignity: 15.0, Timestamp: '2026-10-16T18:05:00Z' },
-      { Respondent_ID: 'Resp_1003', Present_Equality: 25.0, Present_Sustainability: 50.0, Present_Dignity: 25.0, Future_Equality: 10.0, Future_Sustainability: 80.0, Future_Dignity: 10.0, Timestamp: '2026-10-16T18:12:00Z' },
-      { Respondent_ID: 'Resp_1004', Present_Equality: 50.0, Present_Sustainability: 10.0, Present_Dignity: 40.0, Future_Equality: 30.0, Future_Sustainability: 40.0, Future_Dignity: 30.0, Timestamp: '2026-10-16T18:20:00Z' },
-      { Respondent_ID: 'Resp_1005', Present_Equality: 30.0, Present_Sustainability: 30.0, Present_Dignity: 40.0, Future_Equality: 25.0, Future_Sustainability: 50.0, Future_Dignity: 25.0, Timestamp: '2026-10-16T18:25:00Z' },
-      { Respondent_ID: 'Resp_1006', Present_Equality: 35.0, Present_Sustainability: 35.0, Present_Dignity: 30.0, Future_Equality: 20.0, Future_Sustainability: 65.0, Future_Dignity: 15.0, Timestamp: '2026-10-16T18:30:00Z' },
-      { Respondent_ID: 'Resp_1007', Present_Equality: 20.0, Present_Sustainability: 40.0, Present_Dignity: 40.0, Future_Equality: 15.0, Future_Sustainability: 75.0, Future_Dignity: 10.0, Timestamp: '2026-10-16T18:35:00Z' },
-      { Respondent_ID: 'Resp_1008', Present_Equality: 45.0, Present_Sustainability: 25.0, Present_Dignity: 30.0, Future_Equality: 35.0, Future_Sustainability: 45.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T18:40:00Z' },
-      { Respondent_ID: 'Resp_1009', Present_Equality: 33.0, Present_Sustainability: 33.0, Present_Dignity: 34.0, Future_Equality: 10.0, Future_Sustainability: 80.0, Future_Dignity: 10.0, Timestamp: '2026-10-16T18:45:00Z' },
-      { Respondent_ID: 'Resp_1010', Present_Equality: 28.0, Present_Sustainability: 42.0, Present_Dignity: 30.0, Future_Equality: 18.0, Future_Sustainability: 62.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T18:50:00Z' },
-      { Respondent_ID: 'Resp_1011', Present_Equality: 30.0, Present_Sustainability: 20.0, Present_Dignity: 50.0, Future_Equality: 20.0, Future_Sustainability: 50.0, Future_Dignity: 30.0, Timestamp: '2026-10-16T18:55:00Z' },
-      { Respondent_ID: 'Resp_1012', Present_Equality: 38.0, Present_Sustainability: 32.0, Present_Dignity: 30.0, Future_Equality: 25.0, Future_Sustainability: 55.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T19:00:00Z' },
-      { Respondent_ID: 'Resp_1013', Present_Equality: 22.0, Present_Sustainability: 48.0, Present_Dignity: 30.0, Future_Equality: 12.0, Future_Sustainability: 78.0, Future_Dignity: 10.0, Timestamp: '2026-10-16T19:05:00Z' },
-      { Respondent_ID: 'Resp_1014', Present_Equality: 40.0, Present_Sustainability: 30.0, Present_Dignity: 30.0, Future_Equality: 30.0, Future_Sustainability: 50.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T19:10:00Z' },
-      { Respondent_ID: 'Resp_1015', Present_Equality: 33.3, Present_Sustainability: 33.3, Present_Dignity: 33.4, Future_Equality: 15.0, Future_Sustainability: 70.0, Future_Dignity: 15.0, Timestamp: '2026-10-16T19:15:00Z' },
-      { Respondent_ID: 'Resp_1016', Present_Equality: 25.0, Present_Sustainability: 25.0, Present_Dignity: 50.0, Future_Equality: 20.0, Future_Sustainability: 60.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T19:20:00Z' },
-      { Respondent_ID: 'Resp_1017', Present_Equality: 35.0, Present_Sustainability: 40.0, Present_Dignity: 25.0, Future_Equality: 22.0, Future_Sustainability: 68.0, Future_Dignity: 10.0, Timestamp: '2026-10-16T19:25:00Z' },
-      { Respondent_ID: 'Resp_1018', Present_Equality: 29.0, Present_Sustainability: 31.0, Present_Dignity: 40.0, Future_Equality: 19.0, Future_Sustainability: 61.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T19:30:00Z' },
-      { Respondent_ID: 'Resp_1019', Present_Equality: 42.0, Present_Sustainability: 18.0, Present_Dignity: 40.0, Future_Equality: 28.0, Future_Sustainability: 52.0, Future_Dignity: 20.0, Timestamp: '2026-10-16T19:35:00Z' },
-      { Respondent_ID: 'Resp_1020', Present_Equality: 31.0, Present_Sustainability: 39.0, Present_Dignity: 30.0, Future_Equality: 15.0, Future_Sustainability: 72.0, Future_Dignity: 13.0, Timestamp: '2026-10-16T19:40:00Z' },
-      { Respondent_ID: 'Resp_1021', Present_Equality: 36.0, Present_Sustainability: 34.0, Present_Dignity: 30.0, Future_Equality: 18.0, Future_Sustainability: 64.0, Future_Dignity: 18.0, Timestamp: '2026-10-16T19:45:00Z' }
+      {"Respondent_ID": "Resp_1001", "Present_Equality": 23.1, "Present_Sustainability": 58.1, "Present_Dignity": 18.9, "Future_Equality": 51.2, "Future_Sustainability": 23.3, "Future_Dignity": 25.5, "Timestamp": "2026-10-16T16:24:34.075Z"},
+      {"Respondent_ID": "Resp_1002", "Present_Equality": 8.4, "Present_Sustainability": 36.3, "Present_Dignity": 55.3, "Future_Equality": 29.0, "Future_Sustainability": 5.8, "Future_Dignity": 65.2, "Timestamp": "2026-10-16T16:27:03.778Z"},
+      {"Respondent_ID": "Resp_1003", "Present_Equality": 15.3, "Present_Sustainability": 12.9, "Present_Dignity": 71.8, "Future_Equality": 82.6, "Future_Sustainability": 8.1, "Future_Dignity": 9.4, "Timestamp": "2026-10-16T16:27:54.897Z"},
+      {"Respondent_ID": "Resp_1004", "Present_Equality": 24.9, "Present_Sustainability": 9.6, "Present_Dignity": 65.6, "Future_Equality": 59.5, "Future_Sustainability": 9.7, "Future_Dignity": 30.8, "Timestamp": "2026-10-16T16:44:50.135Z"},
+      {"Respondent_ID": "Resp_1005", "Present_Equality": 49.1, "Present_Sustainability": 26.6, "Present_Dignity": 24.3, "Future_Equality": 51.6, "Future_Sustainability": 26.1, "Future_Dignity": 22.3, "Timestamp": "2026-10-16T16:49:28.630Z"},
+      {"Respondent_ID": "Resp_1006", "Present_Equality": 30.6, "Present_Sustainability": 24.3, "Present_Dignity": 45.2, "Future_Equality": 35.0, "Future_Sustainability": 41.2, "Future_Dignity": 23.7, "Timestamp": "2026-10-16T16:55:09.505Z"},
+      {"Respondent_ID": "Resp_1007", "Present_Equality": 0.0, "Present_Sustainability": 13.1, "Present_Dignity": 86.9, "Future_Equality": 27.7, "Future_Sustainability": 39.1, "Future_Dignity": 33.2, "Timestamp": "2026-10-16T16:55:10.117Z"},
+      {"Respondent_ID": "Resp_1008", "Present_Equality": 16.8, "Present_Sustainability": 27.5, "Present_Dignity": 55.7, "Future_Equality": 39.1, "Future_Sustainability": 32.1, "Future_Dignity": 28.7, "Timestamp": "2026-10-16T16:56:14.070Z"},
+      {"Respondent_ID": "Resp_1009", "Present_Equality": 48.8, "Present_Sustainability": 32.9, "Present_Dignity": 18.3, "Future_Equality": 44.6, "Future_Sustainability": 23.9, "Future_Dignity": 31.5, "Timestamp": "2026-10-16T16:56:27.230Z"},
+      {"Respondent_ID": "Resp_1010", "Present_Equality": 3.6, "Present_Sustainability": 58.0, "Present_Dignity": 38.4, "Future_Equality": 10.1, "Future_Sustainability": 74.8, "Future_Dignity": 15.1, "Timestamp": "2026-10-16T16:57:04.699Z"},
+      {"Respondent_ID": "Resp_1011", "Present_Equality": 33.3, "Present_Sustainability": 33.3, "Present_Dignity": 33.3, "Future_Equality": 33.3, "Future_Sustainability": 33.3, "Future_Dignity": 33.3, "Timestamp": "2026-10-16T16:57:20.513Z"},
+      {"Respondent_ID": "Resp_1012", "Present_Equality": 37.8, "Present_Sustainability": 57.8, "Present_Dignity": 4.4, "Future_Equality": 41.8, "Future_Sustainability": 14.6, "Future_Dignity": 43.6, "Timestamp": "2026-10-16T16:57:52.174Z"},
+      {"Respondent_ID": "Resp_1013", "Present_Equality": 22.3, "Present_Sustainability": 18.8, "Present_Dignity": 59.0, "Future_Equality": 31.1, "Future_Sustainability": 55.1, "Future_Dignity": 13.7, "Timestamp": "2026-10-16T17:02:35.747Z"},
+      {"Respondent_ID": "Resp_1014", "Present_Equality": 17.3, "Present_Sustainability": 64.2, "Present_Dignity": 18.6, "Future_Equality": 28.7, "Future_Sustainability": 17.6, "Future_Dignity": 53.6, "Timestamp": "2026-10-16T17:06:29.450Z"},
+      {"Respondent_ID": "Resp_1015", "Present_Equality": 52.4, "Present_Sustainability": 24.5, "Present_Dignity": 23.0, "Future_Equality": 26.8, "Future_Sustainability": 64.7, "Future_Dignity": 8.5, "Timestamp": "2026-10-16T17:13:54.817Z"},
+      {"Respondent_ID": "Resp_1016", "Present_Equality": 45.9, "Present_Sustainability": 40.3, "Present_Dignity": 13.8, "Future_Equality": 39.5, "Future_Sustainability": 46.4, "Future_Dignity": 14.0, "Timestamp": "2026-10-16T17:21:10.536Z"},
+      {"Respondent_ID": "Resp_1017", "Present_Equality": 19.2, "Present_Sustainability": 36.2, "Present_Dignity": 44.7, "Future_Equality": 40.4, "Future_Sustainability": 20.9, "Future_Dignity": 38.7, "Timestamp": "2026-10-16T17:33:37.994Z"},
+      {"Respondent_ID": "Resp_1018", "Present_Equality": 30.6, "Present_Sustainability": 43.6, "Present_Dignity": 25.8, "Future_Equality": 41.9, "Future_Sustainability": 47.4, "Future_Dignity": 10.7, "Timestamp": "2026-10-16T17:47:37.050Z"},
+      {"Respondent_ID": "Resp_1019", "Present_Equality": 27.1, "Present_Sustainability": 39.0, "Present_Dignity": 33.9, "Future_Equality": 32.7, "Future_Sustainability": 36.8, "Future_Dignity": 30.6, "Timestamp": "2026-10-16T17:56:52.611Z"},
+      {"Respondent_ID": "Resp_1020", "Present_Equality": 67.1, "Present_Sustainability": 32.9, "Present_Dignity": 0.0, "Future_Equality": 0.0, "Future_Sustainability": 46.8, "Future_Dignity": 53.2, "Timestamp": "2026-10-16T17:58:57.283Z"},
+      {"Respondent_ID": "Resp_1021", "Present_Equality": 33.3, "Present_Sustainability": 33.3, "Present_Dignity": 33.3, "Future_Equality": 33.3, "Future_Sustainability": 33.3, "Future_Dignity": 33.3, "Timestamp": "2026-10-16T18:56:41.294Z"}
     ];
 
     let state = {
@@ -260,8 +286,8 @@
       ctx.clearRect(0, 0, w, h);
       const v = getVertices(w, h);
 
-      // Soft champagne gridlines
-      ctx.strokeStyle = 'rgba(247, 231, 206, 0.1)';
+      // Champagne Gridlines
+      ctx.strokeStyle = 'rgba(247, 231, 206, 0.12)';
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) {
         const f = i / 5;
@@ -271,7 +297,7 @@
         ctx.stroke();
       }
 
-      // Main Outer Triangle
+      // Outer Triangle Border
       ctx.beginPath();
       ctx.moveTo(v.top.x, v.top.y);
       ctx.lineTo(v.left.x, v.left.y);
@@ -281,28 +307,28 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Label Styling
+      // Vertex Labels
       ctx.font = '600 12px "Plus Jakarta Sans"';
       ctx.fillStyle = '#fecdd3'; ctx.textAlign = 'center'; ctx.fillText('Equality (Top)', v.top.x, v.top.y - 14);
       ctx.fillStyle = '#a7f3d0'; ctx.textAlign = 'right'; ctx.fillText('Sustainability', v.left.x - 10, v.left.y + 14);
       ctx.fillStyle = '#fef08a'; ctx.textAlign = 'left'; ctx.fillText('Human Dignity', v.right.x + 10, v.right.y + 14);
 
-      // Existing dots
+      // Plot All Saved Responses
       state.responses.forEach(r => {
         const val = isPresent ? { eq: r.Present_Equality, sus: r.Present_Sustainability, dig: r.Present_Dignity } : { eq: r.Future_Equality, sus: r.Future_Sustainability, dig: r.Future_Dignity };
         if (val.eq !== undefined) {
           const pt = baryToPoint(val.eq, val.sus, val.dig, w, h);
           ctx.beginPath();
-          ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-          ctx.fillStyle = isPresent ? 'rgba(225, 112, 133, 0.45)' : 'rgba(247, 231, 206, 0.45)';
+          ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = isPresent ? 'rgba(225, 112, 133, 0.6)' : 'rgba(247, 231, 206, 0.6)';
           ctx.fill();
         }
       });
 
-      // Active interactive handle
+      // Active Handle Marker
       const activePt = baryToPoint(selectedVal.eq, selectedVal.sus, selectedVal.dig, w, h);
       ctx.beginPath();
-      ctx.arc(activePt.x, activePt.y, 7.5, 0, Math.PI * 2);
+      ctx.arc(activePt.x, activePt.y, 8, 0, Math.PI * 2);
       ctx.fillStyle = isPresent ? '#f43f5e' : '#fbbf24';
       ctx.fill();
       ctx.strokeStyle = '#ffffff';
@@ -377,7 +403,14 @@
     window.onload = () => {
       const saved = localStorage.getItem('ternary_responses');
       if (saved) {
-        state.responses = JSON.parse(saved);
+        let parsed = JSON.parse(saved);
+        // Guarantee exact 21 baseline records loaded
+        if (parsed.length < initialOldResponses.length) {
+          state.responses = initialOldResponses;
+          localStorage.setItem('ternary_responses', JSON.stringify(state.responses));
+        } else {
+          state.responses = parsed;
+        }
       } else {
         state.responses = initialOldResponses;
         localStorage.setItem('ternary_responses', JSON.stringify(state.responses));
