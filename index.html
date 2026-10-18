@@ -204,7 +204,7 @@
     <!-- Submit Button -->
     <div class="flex justify-center pt-4">
       <button id="submitBtn" onclick="submitResponses()" class="px-12 py-4 bg-gradient-to-r from-rose-700 via-pink-600 to-amber-500 hover:from-rose-600 hover:to-amber-400 text-white font-serif-title font-bold text-xl rounded-2xl shadow-2xl transition transform active:scale-95 flex items-center gap-3 border border-amber-200/40">
-        <span>🌹</span> Submit Assessment <span>🥂</span>
+        <span id="btnIconLeft">🌹</span> <span id="btnText">Submit Assessment</span> <span id="btnIconRight">🥂</span>
       </button>
     </div>
 
@@ -246,6 +246,28 @@
     const cFut = document.getElementById('canvasFuture');
     const ctxPres = cPres.getContext('2d');
     const ctxFut = cFut.getContext('2d');
+
+    function checkExistingUserSubmission() {
+      const userRespId = localStorage.getItem('user_submission_id');
+      if (userRespId) {
+        document.getElementById('btnText').innerText = 'Update My Assessment';
+        const userResp = state.responses.find(r => r.Respondent_ID === userRespId);
+        if (userResp) {
+          state.present = { eq: userResp.Present_Equality, sus: userResp.Present_Sustainability, dig: userResp.Present_Dignity };
+          state.future = { eq: userResp.Future_Equality, sus: userResp.Future_Sustainability, dig: userResp.Future_Dignity };
+          updateValueLabels();
+        }
+      }
+    }
+
+    function updateValueLabels() {
+      document.getElementById('val-pres-eq').innerText = state.present.eq.toFixed(1) + '%';
+      document.getElementById('val-pres-sus').innerText = state.present.sus.toFixed(1) + '%';
+      document.getElementById('val-pres-dig').innerText = state.present.dig.toFixed(1) + '%';
+      document.getElementById('val-fut-eq').innerText = state.future.eq.toFixed(1) + '%';
+      document.getElementById('val-fut-sus').innerText = state.future.sus.toFixed(1) + '%';
+      document.getElementById('val-fut-dig').innerText = state.future.dig.toFixed(1) + '%';
+    }
 
     function updateCounterUI() {
       document.getElementById('responseCounter').innerText = state.responses.length;
@@ -346,15 +368,10 @@
         
         if (isPresent) {
           state.present = bary;
-          document.getElementById('val-pres-eq').innerText = bary.eq.toFixed(1) + '%';
-          document.getElementById('val-pres-sus').innerText = bary.sus.toFixed(1) + '%';
-          document.getElementById('val-pres-dig').innerText = bary.dig.toFixed(1) + '%';
         } else {
           state.future = bary;
-          document.getElementById('val-fut-eq').innerText = bary.eq.toFixed(1) + '%';
-          document.getElementById('val-fut-sus').innerText = bary.sus.toFixed(1) + '%';
-          document.getElementById('val-fut-dig').innerText = bary.dig.toFixed(1) + '%';
         }
+        updateValueLabels();
         render();
       };
 
@@ -370,20 +387,54 @@
     }
 
     function submitResponses() {
-      const resp = {
-        Respondent_ID: 'Resp_' + Math.floor(Math.random()*10000),
-        Present_Equality: parseFloat(state.present.eq.toFixed(1)),
-        Present_Sustainability: parseFloat(state.present.sus.toFixed(1)),
-        Present_Dignity: parseFloat(state.present.dig.toFixed(1)),
-        Future_Equality: parseFloat(state.future.eq.toFixed(1)),
-        Future_Sustainability: parseFloat(state.future.sus.toFixed(1)),
-        Future_Dignity: parseFloat(state.future.dig.toFixed(1)),
-        Timestamp: new Date().toISOString()
-      };
-      state.responses.push(resp);
+      let userRespId = localStorage.getItem('user_submission_id');
+      
+      if (!userRespId) {
+        // Create new response for first-time voter on this device
+        userRespId = 'Resp_' + Math.floor(100000 + Math.random() * 900000);
+        localStorage.setItem('user_submission_id', userRespId);
+        
+        const newResp = {
+          Respondent_ID: userRespId,
+          Present_Equality: parseFloat(state.present.eq.toFixed(1)),
+          Present_Sustainability: parseFloat(state.present.sus.toFixed(1)),
+          Present_Dignity: parseFloat(state.present.dig.toFixed(1)),
+          Future_Equality: parseFloat(state.future.eq.toFixed(1)),
+          Future_Sustainability: parseFloat(state.future.sus.toFixed(1)),
+          Future_Dignity: parseFloat(state.future.dig.toFixed(1)),
+          Timestamp: new Date().toISOString()
+        };
+        state.responses.push(newResp);
+        alert('Thank you! Your assessment has been recorded.');
+      } else {
+        // Update existing voter's response
+        const idx = state.responses.findIndex(r => r.Respondent_ID === userRespId);
+        if (idx !== -1) {
+          state.responses[idx].Present_Equality = parseFloat(state.present.eq.toFixed(1));
+          state.responses[idx].Present_Sustainability = parseFloat(state.present.sus.toFixed(1));
+          state.responses[idx].Present_Dignity = parseFloat(state.present.dig.toFixed(1));
+          state.responses[idx].Future_Equality = parseFloat(state.future.eq.toFixed(1));
+          state.responses[idx].Future_Sustainability = parseFloat(state.future.sus.toFixed(1));
+          state.responses[idx].Future_Dignity = parseFloat(state.future.dig.toFixed(1));
+          state.responses[idx].Timestamp = new Date().toISOString();
+        } else {
+          state.responses.push({
+            Respondent_ID: userRespId,
+            Present_Equality: parseFloat(state.present.eq.toFixed(1)),
+            Present_Sustainability: parseFloat(state.present.sus.toFixed(1)),
+            Present_Dignity: parseFloat(state.present.dig.toFixed(1)),
+            Future_Equality: parseFloat(state.future.eq.toFixed(1)),
+            Future_Sustainability: parseFloat(state.future.sus.toFixed(1)),
+            Future_Dignity: parseFloat(state.future.dig.toFixed(1)),
+            Timestamp: new Date().toISOString()
+          });
+        }
+        alert('Your assessment has been updated successfully!');
+      }
+
       localStorage.setItem('ternary_responses', JSON.stringify(state.responses));
+      checkExistingUserSubmission();
       render();
-      alert('Thank you! Your assessment has been saved. Total Submissions: ' + state.responses.length);
     }
 
     function exportDataCSV() {
@@ -404,19 +455,19 @@
       const saved = localStorage.getItem('ternary_responses');
       if (saved) {
         let parsed = JSON.parse(saved);
-        // Guarantee exact 21 baseline records loaded
-        if (parsed.length < initialOldResponses.length) {
-          state.responses = initialOldResponses;
-          localStorage.setItem('ternary_responses', JSON.stringify(state.responses));
-        } else {
-          state.responses = parsed;
-        }
+        // Merge baseline old responses if missing
+        let map = new Map();
+        initialOldResponses.forEach(r => map.set(r.Respondent_ID, r));
+        parsed.forEach(r => map.set(r.Respondent_ID, r));
+        state.responses = Array.from(map.values());
       } else {
-        state.responses = initialOldResponses;
-        localStorage.setItem('ternary_responses', JSON.stringify(state.responses));
+        state.responses = [...initialOldResponses];
       }
+      localStorage.setItem('ternary_responses', JSON.stringify(state.responses));
+
       setupInteraction(cPres, true);
       setupInteraction(cFut, false);
+      checkExistingUserSubmission();
       render();
     };
   </script>
